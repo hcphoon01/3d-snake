@@ -31,6 +31,8 @@ public class SpawnManager : MonoBehaviour
         maxSpawnLimit = ground.transform.lossyScale / 2 + new Vector3(-1, 1, -1);
         minSpawnLimit = -ground.transform.lossyScale / 2 + new Vector3(1, 1, 1);
 
+        CallSpawnFood();
+
     }
 
     // Update is called once per frame
@@ -44,7 +46,7 @@ public class SpawnManager : MonoBehaviour
         spawnLocation = new Vector3(0, 5, 0);
         newBody = Instantiate(body, spawnLocation, Quaternion.identity);
         newBody.transform.SetParent(bodyList.transform);
-        head.GetComponent<PlayerMovement>().bodyParts.Add(newBody);
+        head.GetComponent<PlayerMovement>().bodyParts.Insert(head.GetComponent<PlayerMovement>().bodyParts.Count - 1, newBody);
     }
 
     void SpawnFood()

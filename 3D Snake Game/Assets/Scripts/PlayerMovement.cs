@@ -7,14 +7,17 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public float forwardForce = 2000f;
     public float rotationMultiplier = 1f;
-    public float bodySeparation = 1f;
+    public float minDistance = 1f;
 
     public List<GameObject> bodyParts = new List<GameObject>();
 
     private Vector3 bodyOffset;
     private Quaternion rotationOffset;
 
+    private GameObject currBodyPart;
     private GameObject prevBodyPart;
+
+    private float dis;
 
     private void Start()
     {
@@ -36,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
             rb.transform.Rotate(0, rotationMultiplier, 0, Space.Self);
         }
 
-        int i = 0;
+        /*int i = 0;
 
         foreach (GameObject body in bodyParts)
         {
@@ -54,6 +57,36 @@ public class PlayerMovement : MonoBehaviour
             body.transform.rotation = prevBodyPart.transform.rotation * rotationOffset;
 
             prevBodyPart = body;
+        }*/
+
+        for (int i = 0; i < bodyParts.Count; i++)
+        {
+            currBodyPart = bodyParts[i];
+
+            if ( i == 0 )
+            {
+                prevBodyPart = rb.transform.gameObject;
+            }
+            else
+            {
+                prevBodyPart = bodyParts[i - 1];
+            }
+            
+
+            dis = Vector3.Distance(prevBodyPart.transform.position, currBodyPart.transform.position);
+
+            Vector3 newPos = prevBodyPart.transform.position;
+
+            newPos.y = rb.position.y;
+
+            float T = Time.deltaTime * dis / minDistance;
+
+            if ( T > 0.5f)
+            {
+                T = 0.5f;
+            }
+            currBodyPart.transform.position = Vector3.Slerp(currBodyPart.transform.position, newPos, T);
+            currBodyPart.transform.rotation = Quaternion.Slerp(currBodyPart.transform.rotation, prevBodyPart.transform.rotation, T);
         }
         
     }
