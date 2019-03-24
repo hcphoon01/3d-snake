@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public List<GameObject> bodyParts = new List<GameObject>();
 
     private Vector3 bodyOffset;
+    private Quaternion rotationOffset;
 
     private GameObject prevBodyPart;
 
@@ -35,32 +36,35 @@ public class PlayerMovement : MonoBehaviour
             rb.transform.Rotate(0, rotationMultiplier, 0, Space.Self);
         }
 
+        int i = 0;
+
         foreach (GameObject body in bodyParts)
         {
             
-            bodyOffset = new Vector3(GetXComponent(1) + bodySeparation, 0, GetZComponent(1) + bodySeparation);
-            Debug.Log(bodyOffset);
-            body.transform.position = prevBodyPart.transform.position + bodyOffset;
-            if (body != prevBodyPart)
-            {
-                prevBodyPart = body;
-            }
-            if (bodyParts.Count <= 1)
+            if (i == 0)
             {
                 prevBodyPart = rb.transform.gameObject;
             }
-            //body.GetComponent<Rigidbody>().AddForce(GetXComponent() * Time.deltaTime, 0, -GetZComponent() * Time.deltaTime);
+            ++i;
+
+            bodyOffset = new Vector3(GetXComponent(-bodySeparation), 0, GetZComponent(bodySeparation));
+            rotationOffset = Quaternion.Euler(GetXComponent(1), 0, GetZComponent(1));
+
+            body.transform.position = prevBodyPart.transform.position + bodyOffset;
+            body.transform.rotation = prevBodyPart.transform.rotation * rotationOffset;
+
+            prevBodyPart = body;
         }
         
     }
 
     private float GetXComponent(float multiplier)
     {
-        return multiplier * Mathf.Cos(rb.transform.eulerAngles.y * Mathf.Deg2Rad);
+        return (multiplier * Mathf.Cos(rb.transform.eulerAngles.y * Mathf.Deg2Rad));
     }
 
-    private float GetZComponent(float multiplier)
+    private float GetZComponent(float multiplier, float addend = 0)
     {
-        return multiplier * Mathf.Sin(rb.transform.eulerAngles.y * Mathf.Deg2Rad);
+        return (multiplier * Mathf.Sin(rb.transform.eulerAngles.y * Mathf.Deg2Rad));
     }
 }

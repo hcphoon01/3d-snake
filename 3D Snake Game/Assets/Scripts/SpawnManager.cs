@@ -7,6 +7,9 @@ public class SpawnManager : MonoBehaviour
     public GameObject food;
     public GameObject body;
     public GameObject head;
+    public GameObject foodList;
+    public GameObject bodyList;
+
     public float spawnDelay = 2f;
 
     private Vector3 maxSpawnLimit;
@@ -16,6 +19,7 @@ public class SpawnManager : MonoBehaviour
 
     private GameObject ground;
     private GameObject newBody;
+    private GameObject newFood;
 
     public List<GameObject> bodyParts = new List<GameObject>();
 
@@ -39,13 +43,15 @@ public class SpawnManager : MonoBehaviour
     {
         spawnLocation = new Vector3(0, 5, 0);
         newBody = Instantiate(body, spawnLocation, Quaternion.identity);
+        newBody.transform.SetParent(bodyList.transform);
         head.GetComponent<PlayerMovement>().bodyParts.Add(newBody);
     }
 
     void SpawnFood()
     {
         spawnLocation = new Vector3(Random.Range(minSpawnLimit[0], maxSpawnLimit[0]), 0, Random.Range(minSpawnLimit[2], maxSpawnLimit[2])) + new Vector3(0, 5, 0);
-        Instantiate(food, spawnLocation, Quaternion.identity);
+        newFood = Instantiate(food, spawnLocation, Quaternion.identity);
+        newFood.transform.SetParent(foodList.transform);
     }
 
     public void CallSpawnFood()
