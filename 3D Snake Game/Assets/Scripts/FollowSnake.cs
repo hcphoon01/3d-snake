@@ -18,6 +18,7 @@ public class FollowSnake : MonoBehaviour
         }
 
         Quaternion rotationOffset = Quaternion.Euler(0, 90, 0);
+        Quaternion rotation = new Quaternion(0, player.rotation.y, 0, player.rotation.w);
 
         if (firstPerson)
         {
@@ -30,7 +31,7 @@ public class FollowSnake : MonoBehaviour
 
             transform.position = player.position + positionOffset;
 
-            transform.rotation = player.rotation * rotationOffset;
+            transform.rotation = rotation * rotationOffset;
         }
     }
 
